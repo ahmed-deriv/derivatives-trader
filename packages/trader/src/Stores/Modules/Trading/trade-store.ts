@@ -57,9 +57,9 @@ import {
     TRADE_TYPES,
     WS,
 } from '@deriv/shared';
-import { localize } from '@deriv-com/translations';
 import { safeParse } from '@deriv/utils';
 import type { TEvents } from '@deriv-com/analytics';
+import { localize } from '@deriv-com/translations';
 
 import { isDigitContractType, isDigitTradeType } from 'Modules/Trading/Helpers/digits';
 import { getMultiplierValidationRules, getValidationRules } from 'Stores/Modules/Trading/Constants/validation-rules';

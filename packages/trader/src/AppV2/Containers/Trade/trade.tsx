@@ -2,8 +2,8 @@ import React from 'react';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 
-import { Loading } from '@deriv/components';
 import { useLocalStorageData } from '@deriv/api';
+import { Loading } from '@deriv/components';
 import { getSymbolDisplayName } from '@deriv/shared';
 import { useStore } from '@deriv/stores';
 

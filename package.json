@@ -90,6 +90,7 @@
         "@babel/preset-typescript": "^7.24.7",
         "@deriv-com/analytics": "1.31.3",
         "@deriv-com/derivatives-charts": "^1.1.6",
+        "@deriv-com/smartcharts-champion": "0.2.0",
         "@types/react-transition-group": "^4.4.4",
         "babel-jest": "^29.7.0",
         "dotenv": "^8.2.0",

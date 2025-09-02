@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { ActiveSymbols } from '@deriv/api-types';
 import { ChartBarrierStore } from '@deriv/shared';
@@ -104,43 +104,99 @@ const TradeChart = observer((props: TTradeChartProps) => {
             );
     };
 
+    /* Mock Functions */
+    const getQuotes = useCallback(async ({ symbol, granularity, count = 100, start, end, style }: any) => {
+        const now = Math.floor(Date.now() / 1000);
+        const startTime = start || now - count * (granularity || 60);
+
+        const mockCandles = Array.from({ length: count }, (_, i) => {
+            const time = startTime + i * (granularity || 60);
+            const basePrice = 100 + Math.sin(i * 0.1) * 10 + Math.random() * 5;
+            const volatility = 0.5 + Math.random() * 1.5;
+
+            return {
+                epoch: time,
+                open: basePrice,
+                high: basePrice + Math.random() * volatility,
+                low: basePrice - Math.random() * volatility,
+                close: basePrice + (Math.random() - 0.5) * volatility,
+            };
+        });
+
+        if (style === 'ticks') {
+            return {
+                history: {
+                    times: mockCandles.map(c => c.epoch),
+                    prices: mockCandles.map(c => c.close),
+                },
+            };
+        }
+
+        return { candles: mockCandles };
+    }, []);
+
+    const subscribeQuotes = useCallback(({ symbol, granularity }: any, callback: any) => {
+        let isActive = true;
+        const interval = setInterval(() => {
+            if (!isActive) return;
+            const tick = {
+                epoch: Math.floor(Date.now() / 1000),
+                quote: 100 + Math.sin(Date.now() * 0.001) * 10 + Math.random() * 2,
+            };
+            callback({ tick });
+        }, 1000);
+
+        return () => {
+            isActive = false;
+            clearInterval(interval);
+        };
+    }, []);
+
+    const unsubscribeQuotes = useCallback((request: any) => {
+        /* unsubscribe Call */
+    }, []);
+    /* Mock End here */
+
     const barriers: ChartBarrierStore[] = main_barrier ? [main_barrier, ...extra_barriers] : extra_barriers;
 
     // max ticks to display for mobile view for tick chart
     const max_ticks = granularity === 0 ? 8 : 24;
 
     if (!symbol || !active_symbols.length) return null;
+
+    /* Remove Props 
+            // crosshair={isMobile ? 0 : undefined}
+            // crosshairTooltipLeftAllow={560}
+            // showLastDigitStats={show_digits_stats}
+            // initialData={{ activeSymbols: JSON.parse(JSON.stringify(active_symbols)) }}
+            // requestAPI={wsSendRequest}
+            // requestForget={wsForget}
+            // requestForgetStream={wsForgetStream}
+            // requestSubscribe={wsSubscribe}
+            // hasAlternativeSource={has_alternative_source}
+    */
+
     return (
         <SmartChart
             ref={ref}
-            barriers={barriers}
-            contracts_array={markers_array}
-            bottomWidgets={(is_accumulator || show_digits_stats) && !isMobile ? bottomWidgets : props.bottomWidgets}
-            crosshair={isMobile ? 0 : undefined}
-            crosshairTooltipLeftAllow={560}
-            showLastDigitStats={show_digits_stats}
+            id='trade'
             chartControlsWidgets={null}
             chartStatusListener={(v: boolean) => setChartStatus(!v, true)}
             chartType={chart_type}
-            initialData={{
-                activeSymbols: JSON.parse(JSON.stringify(active_symbols)),
-            }}
             chartData={{
                 activeSymbols: JSON.parse(JSON.stringify(active_symbols)),
+                tradingTimes: { [symbol]: { isOpen: true, openTime: '', closeTime: '' } },
             }}
-            feedCall={{
-                activeSymbols: false,
-            }}
+            feedCall={{ activeSymbols: false, tradingTimes: false }}
             enabledNavigationWidget={!isMobile}
             enabledChartFooter={false}
-            id='trade'
             isMobile={isMobile}
             maxTick={isMobile ? max_ticks : undefined}
             granularity={show_digits_stats || is_accumulator ? 0 : granularity}
-            requestAPI={wsSendRequest}
-            requestForget={wsForget}
-            requestForgetStream={wsForgetStream}
-            requestSubscribe={wsSubscribe}
+            getQuotes={getQuotes}
+            subscribeQuotes={subscribeQuotes}
+            unsubscribeQuotes={unsubscribeQuotes}
+            getMarketsOrder={getMarketsOrder}
             settings={settings}
             allowTickChartTypeOnly={show_digits_stats || is_accumulator}
             stateChangeListener={chartStateChange}
@@ -148,20 +204,20 @@ const TradeChart = observer((props: TTradeChartProps) => {
             topWidgets={is_trade_enabled ? topWidgets : null}
             isConnectionOpened={is_socket_opened}
             clearChart={false}
+            bottomWidgets={(is_accumulator || show_digits_stats) && !isMobile ? bottomWidgets : props.bottomWidgets}
             toolbarWidget={() => {
                 return <ToolbarWidgets updateChartType={updateChartType} updateGranularity={updateGranularity} />;
             }}
             importedLayout={chart_layout}
             onExportLayout={exportLayout}
             shouldFetchTradingTimes={false}
-            hasAlternativeSource={has_alternative_source}
-            getMarketsOrder={getMarketsOrder}
-            should_zoom_out_on_yaxis={is_accumulator}
-            yAxisMargin={{
-                top: isMobile ? 76 : 106,
-            }}
+            yAxisMargin={{ top: isMobile ? 76 : 106 }}
             isLive
+            should_zoom_out_on_yaxis={is_accumulator}
             leftMargin={!isMobile && is_positions_drawer_on ? 328 : 80}
+            barriers={barriers}
+            contracts_array={markers_array}
+            hasAlternativeSource={has_alternative_source}
         >
             {is_accumulator && (
                 <AccumulatorsChartElements

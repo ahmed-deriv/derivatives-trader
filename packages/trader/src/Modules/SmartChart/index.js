@@ -5,7 +5,7 @@ let module;
 
 const init = () => {
     module = moduleLoader(() => {
-        return import(/* webpackChunkName: "smart_chart" */ '@deriv-com/derivatives-charts');
+        return import(/* webpackChunkName: "smart_chart" */ '@deriv-com/smartcharts-champion');
     });
 
     module.then(({ setSmartChartsPublicPath }) => {

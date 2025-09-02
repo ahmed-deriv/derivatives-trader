@@ -17,10 +17,7 @@ import FormLayout from '../Components/Form/form-layout';
 import { ChartTopWidgets, DigitsWidget } from './chart-widgets';
 import TradeChart from './trade-chart';
 
-export type TBottomWidgetsParams = {
-    digits: number[];
-    tick: TickSpotData | null;
-};
+export type TBottomWidgetsParams = { digits: number[]; tick: TickSpotData | null };
 type TBottomWidgetsMobile = TBottomWidgetsParams & {
     setTick: (tick: TickSpotData | null) => void;
     setDigits: (digits: number[]) => void;
@@ -242,11 +239,7 @@ const Trade = observer(() => {
                             </SwipeableWrapper>
                         </React.Fragment>
                     ) : (
-                        <div
-                            className={classNames('chart-container__wrapper', {
-                                'vanilla-trade-chart': is_vanilla,
-                            })}
-                        >
+                        <div className={classNames('chart-container__wrapper', { 'vanilla-trade-chart': is_vanilla })}>
                             <ChartLoader
                                 is_visible={
                                     is_chart_loading ||
@@ -255,7 +248,7 @@ const Trade = observer(() => {
                                     shouldShowPortraitLoader
                                 }
                             />
-                            <TradeChart topWidgets={topWidgets} is_accumulator={is_accumulator} />
+                            {<TradeChart topWidgets={topWidgets} is_accumulator={is_accumulator} />}
                         </div>
                     )}
                 </React.Suspense>
