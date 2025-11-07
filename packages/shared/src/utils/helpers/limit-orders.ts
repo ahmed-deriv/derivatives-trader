@@ -95,6 +95,9 @@ export const setLimitOrderBarriers = ({
                     key,
                     title: obj_limit_order.display_name,
                     color: key === LIMIT_ORDER_TYPES.TAKE_PROFIT ? BARRIER_COLORS.GREEN : BARRIER_COLORS.ORANGE,
+                    foregroundColor:
+                        key === LIMIT_ORDER_TYPES.TAKE_PROFIT ? BARRIER_COLORS.GREEN : BARRIER_COLORS.ORANGE,
+                    backgroundColor: 'transparent',
                     draggable: false,
                     lineStyle:
                         key === LIMIT_ORDER_TYPES.STOP_OUT ? BARRIER_LINE_STYLES.DOTTED : BARRIER_LINE_STYLES.SOLID,
