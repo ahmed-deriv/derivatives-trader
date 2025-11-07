@@ -16,13 +16,6 @@ jest.mock('@deriv-com/translations', () => ({
     localize: jest.fn().mockImplementation(key => key),
 }));
 
-jest.mock('@deriv/shared', () => ({
-    ...jest.requireActual('@deriv/shared'),
-    TranslationFlag: {
-        EN: jest.fn(() => <div>Flag</div>),
-    },
-}));
-
 describe('ToggleLanguageSettings Component', () => {
     it('should has "ic-settings-active" class when "is_settings_visible" is true', () => {
         const mockRootStore = mockStore({ ui: { is_language_settings_modal_on: true } });

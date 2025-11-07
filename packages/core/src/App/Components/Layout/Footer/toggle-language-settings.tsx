@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { Modal, Popover, Text } from '@deriv/components';
-import { TranslationFlag } from '@deriv/shared';
+import { LabelPairedGlobeSmRegularIcon } from '@deriv/quill-icons';
 import { observer, useStore } from '@deriv/stores';
 import { Localize, useTranslations } from '@deriv-com/translations';
 
@@ -11,9 +11,8 @@ import LanguageSettings from '../../../Containers/SettingsModal/settings-languag
 import 'Sass/app/modules/settings.scss';
 
 const ToggleLanguageSettings = observer(({ showPopover }: { showPopover?: boolean }) => {
-    const { localize } = useTranslations();
+    const { localize, currentLang } = useTranslations();
     const { common, ui } = useStore();
-    const { currentLang } = useTranslations();
     const { is_language_settings_modal_on, toggleLanguageSettingsModal } = ui;
     const { is_language_changing } = common;
 
@@ -24,7 +23,7 @@ const ToggleLanguageSettings = observer(({ showPopover }: { showPopover?: boolea
 
     const content = (
         <React.Fragment>
-            {TranslationFlag[currentLang] && TranslationFlag[currentLang](18, 12)}
+            <LabelPairedGlobeSmRegularIcon />
             <Text weight='bold' size='xxs' className='ic-settings-language__text'>
                 <Localize i18n_default_text={currentLang} />
             </Text>

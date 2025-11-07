@@ -3,7 +3,13 @@ import { withRouter } from 'react-router';
 import classNames from 'classnames';
 
 import { DataList, DataTable, usePrevious } from '@deriv/components';
-import { extractInfoFromShortcode, formatDate, getContractPath, getUnsupportedContracts } from '@deriv/shared';
+import {
+    extractInfoFromShortcode,
+    formatDate,
+    getContractPath,
+    getUnsupportedContracts,
+    initMoment,
+} from '@deriv/shared';
 import { observer, useStore } from '@deriv/stores';
 import { Analytics } from '@deriv-com/analytics';
 import { Localize, useTranslations } from '@deriv-com/translations';
@@ -47,9 +53,10 @@ export const getRowAction = (row_obj: { [key: string]: unknown }) => {
 
 const ProfitTable = observer(({ component_icon }: TProfitTable) => {
     const { localize } = useTranslations();
-    const { client } = useStore();
+    const { client, common } = useStore();
     const { profit_table } = useReportsStore();
     const { currency } = client;
+    const { current_language } = common;
     const {
         data,
         date_from,
@@ -65,6 +72,10 @@ const ProfitTable = observer(({ component_icon }: TProfitTable) => {
         totals,
     } = profit_table;
     const { isDesktop } = useDevice();
+
+    React.useEffect(() => {
+        initMoment(current_language);
+    }, [current_language]);
 
     React.useEffect(() => {
         onMount();
@@ -127,7 +138,7 @@ const ProfitTable = observer(({ component_icon }: TProfitTable) => {
                     />
                 </div>
                 <div className='data-list__row'>
-                    <DataList.Cell row={row} column={columns_map.purchase_time as TDataListCell['column']} />
+                    <DataList.Cell row={row} column={columns_map.purchase_time_unix as TDataListCell['column']} />
                     <DataList.Cell
                         className='data-list__row-cell--amount'
                         row={row}
@@ -135,7 +146,7 @@ const ProfitTable = observer(({ component_icon }: TProfitTable) => {
                     />
                 </div>
                 <div className='data-list__row'>
-                    <DataList.Cell row={row} column={columns_map.sell_time as TDataListCell['column']} />
+                    <DataList.Cell row={row} column={columns_map.sell_time_unix as TDataListCell['column']} />
                     <DataList.Cell
                         className='data-list__row-cell--amount'
                         row={row}

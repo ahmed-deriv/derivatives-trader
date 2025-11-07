@@ -484,7 +484,9 @@ $side-padding: 1.2em;
         }
     }
     .sell_time,
-    .purchase_time {
+    .sell_time_unix,
+    .purchase_time,
+    .purchase_time_unix {
         text-align: left;
         min-width: 120px;
     }
