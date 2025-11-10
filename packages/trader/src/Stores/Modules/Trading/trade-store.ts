@@ -1088,6 +1088,8 @@ export default class TradeStore extends BaseStore {
             // create barrier only when it's available in response
             this.main_barrier = new ChartBarrierStore(barrier, barrier2, this.onChartBarrierChange, {
                 color: BARRIER_COLORS.BLUE,
+                backgroundColor: BARRIER_COLORS.BLUE,
+                foregroundColor: BARRIER_COLORS.WHITE,
                 not_draggable: this.is_turbos || this.is_vanilla,
             });
         } else {

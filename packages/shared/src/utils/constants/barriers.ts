@@ -39,6 +39,7 @@ export const BARRIER_COLORS = {
     RED: '#e6190e',
     ORANGE: '#ff6444',
     BLUE: '#2c9aff',
+    WHITE: '#ffffff',
 };
 
 export const BARRIER_LINE_STYLES = {
