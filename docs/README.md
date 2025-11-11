@@ -1,4 +1,4 @@
-# Derivatives Trader
+# Derivatives Trader V2
 
 > A modern platform for derivatives trading with a modular, component-based architecture.
 
