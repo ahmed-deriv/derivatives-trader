@@ -332,6 +332,7 @@ export default class ContractStore extends BaseStore {
                 not_draggable: true,
                 shade: DEFAULT_SHADES['2'],
                 color: isSmartTraderContract(contract_type) ? BARRIER_COLORS.BLUE : updated_color,
+                foregroundColor: isSmartTraderContract(contract_type) ? BARRIER_COLORS.BLUE : updated_color,
             };
             if (
                 isBarrierSupported(contract_type) &&
@@ -348,6 +349,7 @@ export default class ContractStore extends BaseStore {
                         line_style: !isAccumulatorContract(contract_type) && BARRIER_LINE_STYLES.SOLID,
                         hideBarrierLine: isAccumulatorContract(contract_type),
                         shade: isAccumulatorContract(contract_type) && DEFAULT_SHADES['2'],
+                        backgroundColor: isAccumulatorContract(contract_type) ? BARRIER_COLORS.WHITE : 'transparent',
                     }
                 );
 
