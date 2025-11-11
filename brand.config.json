@@ -3,14 +3,14 @@
     "brand_logo": "BrandDerivLogoCoralIcon",
     "brand_domain": "deriv.com",
     "brand_hostname": {
-        "staging": "staging-home.deriv.com/dashboard",
+        "staging": "home.deriv.com/dashboard",
         "production": "home.deriv.com/dashboard"
     },
     "platform": {
         "name": "Derivatives Trader",
         "logo": "IcRebrandingDerivTrader",
         "hostname": {
-            "staging": "staging-dtrader.deriv.com",
+            "staging": "dtrader.deriv.com",
             "production": "dtrader.deriv.com"
         },
         "websocket": {
