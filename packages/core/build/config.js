@@ -16,14 +16,6 @@ const copyConfig = base => {
             to: 'assets',
         },
         {
-            from: path.resolve(__dirname, '../../../node_modules/@deriv-com/derivatives-charts/dist/chart/assets'),
-            to: 'contract/assets',
-        },
-        {
-            from: path.resolve(__dirname, '../../../node_modules/@deriv-com/derivatives-charts/dist/chart/assets'),
-            to: 'bot/assets',
-        },
-        {
             from: path.resolve(__dirname, '../../../node_modules/@deriv/trader/dist/trader'),
             to: 'trader',
         },
