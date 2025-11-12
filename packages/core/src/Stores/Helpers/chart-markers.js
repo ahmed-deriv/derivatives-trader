@@ -513,7 +513,7 @@ export function calculateMarker(
             });
         }
 
-        if (end_time && entry_spot) {
+        if (end_time && entry_spot && !is_tick_contract) {
             markers.push({
                 epoch: end_time,
                 quote: price,
