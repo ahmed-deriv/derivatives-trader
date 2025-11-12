@@ -9,7 +9,7 @@ import { useMobileBridge } from 'App/Hooks/useMobileBridge';
 const BrandShortLogo = observer(() => {
     const { common } = useStore();
     const { current_language } = common;
-    const { sendBridgeEvent } = useMobileBridge();
+    const { sendBridgeEvent, isBridgeAvailable } = useMobileBridge();
 
     const handleLogoClick = () => {
         sendBridgeEvent('trading:home', () => {
@@ -17,6 +17,11 @@ const BrandShortLogo = observer(() => {
             window.location.href = brandUrl;
         });
     };
+
+    // Hide logo when coming from Flutter mobile app
+    if (isBridgeAvailable()) {
+        return null;
+    }
 
     return (
         <div className='header__menu-left-logo'>
