@@ -106,7 +106,7 @@ describe('BrandShortLogo', () => {
         expect(mockLocation.href).toBe('https://staging-home.deriv.com/dashboard/home');
     });
 
-    it('should use Flutter channel postMessage on mobile when bridge is available', async () => {
+    it('should not render when bridge is available (Flutter mobile app)', () => {
         // Mock mobile bridge available
         const { useMobileBridge } = require('App/Hooks/useMobileBridge');
         const mockSendBridgeEvent = jest.fn();
@@ -116,13 +116,11 @@ describe('BrandShortLogo', () => {
             isDesktop: false,
         });
 
-        renderComponent();
+        const { container } = renderComponent();
 
-        const clickableDiv = screen.getByTestId('brand-logo-clickable');
-
-        await userEvent.click(clickableDiv);
-
-        expect(mockSendBridgeEvent).toHaveBeenCalledWith('trading:home', expect.any(Function));
+        // Logo should not be rendered when bridge is available
+        expect(container.firstChild).toBeNull();
+        expect(screen.queryByTestId('brand-logo-clickable')).not.toBeInTheDocument();
     });
 
     it('should fallback to brand URL when bridge is not available', async () => {
@@ -159,7 +157,7 @@ describe('BrandShortLogo', () => {
         });
         useMobileBridge.mockReturnValue({
             sendBridgeEvent: mockSendBridgeEvent,
-            isBridgeAvailable: jest.fn(() => true),
+            isBridgeAvailable: jest.fn(() => false), // Set to false so logo renders
             isDesktop: false,
         });
 
@@ -172,5 +170,54 @@ describe('BrandShortLogo', () => {
         expect(mockSendBridgeEvent).toHaveBeenCalledWith('trading:home', expect.any(Function));
         expect(getBrandHomeUrl).toHaveBeenCalled();
         expect(mockLocation.href).toBe('https://home.deriv.com/dashboard/home');
+    });
+
+    it('should hide logo when bridge is available (Flutter mobile app)', () => {
+        // Mock bridge available
+        const { useMobileBridge } = require('App/Hooks/useMobileBridge');
+        useMobileBridge.mockReturnValue({
+            sendBridgeEvent: jest.fn(),
+            isBridgeAvailable: jest.fn(() => true),
+            isDesktop: false,
+        });
+
+        const { container } = renderComponent();
+
+        // Logo should not be rendered when bridge is available
+        expect(container.firstChild).toBeNull();
+        expect(screen.queryByTestId('brand-logo-clickable')).not.toBeInTheDocument();
+        expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    });
+
+    it('should show logo when bridge is not available (regular web)', () => {
+        // Mock bridge not available
+        const { useMobileBridge } = require('App/Hooks/useMobileBridge');
+        useMobileBridge.mockReturnValue({
+            sendBridgeEvent: jest.fn(),
+            isBridgeAvailable: jest.fn(() => false),
+            isDesktop: false,
+        });
+
+        renderComponent();
+
+        // Logo should be rendered when bridge is not available
+        expect(screen.getByTestId('brand-logo-clickable')).toBeInTheDocument();
+        expect(screen.getByRole('img')).toBeInTheDocument();
+    });
+
+    it('should show logo on desktop regardless of bridge availability', () => {
+        // Mock desktop - bridge should not be available on desktop
+        const { useMobileBridge } = require('App/Hooks/useMobileBridge');
+        useMobileBridge.mockReturnValue({
+            sendBridgeEvent: jest.fn(),
+            isBridgeAvailable: jest.fn(() => false), // Bridge not available on desktop
+            isDesktop: true,
+        });
+
+        renderComponent();
+
+        // Logo should be rendered on desktop
+        expect(screen.getByTestId('brand-logo-clickable')).toBeInTheDocument();
+        expect(screen.getByRole('img')).toBeInTheDocument();
     });
 });

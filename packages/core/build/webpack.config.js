@@ -55,6 +55,13 @@ module.exports = function (env) {
                 automaticNameDelimiter: '~',
                 enforceSizeThreshold: 500000,
                 cacheGroups: {
+                    // Split out large, stable chart library for better caching
+                    charts: {
+                        test: /[\\/]node_modules[\\/]@deriv-com[\\/]smartcharts-champion[\\/]/,
+                        name: 'charts',
+                        priority: 20,
+                        reuseExistingChunk: true,
+                    },
                     default: {
                         minChunks: 2,
                         minSize: 102400,

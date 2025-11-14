@@ -50,6 +50,7 @@ const Duration = observer(({ is_minimized }: TTradeParametersProps) => {
             proposal_info[contract_type_object[0]]?.error_field === 'duration') ||
         validation_errors.duration.length > 0;
     const isInitialMount = useRef(true);
+    const prevExpiryEpoch = useRef<string | number | null>(null);
     const { client } = useStore();
     const { is_logged_in } = client;
     const { localize } = useTranslations();
@@ -58,15 +59,21 @@ const Duration = observer(({ is_minimized }: TTradeParametersProps) => {
     useEffect(() => {
         if (!expiry_epoch) return;
 
+        // Only sync from expiry_epoch if it actually changed (not from our own update)
+        if (prevExpiryEpoch.current === expiry_epoch) return;
+
+        prevExpiryEpoch.current = expiry_epoch;
+
         const epoch_date = new Date((expiry_epoch as number) * 1000);
         const date_string = epoch_date.toISOString().split('T')[0];
         const time_string = epoch_date.toISOString().split('T')[1].substring(0, 8);
 
+        // Only update if the date actually changed
         if (saved_expiry_date !== date_string) {
             setSavedExpiryDate(date_string);
             setSavedExpiryTime(time_string || '23:59:59');
         }
-    }, [expiry_epoch, saved_expiry_date]);
+    }, [expiry_epoch]);
 
     // When switching to days unit, set tomorrow as default
     useEffect(() => {

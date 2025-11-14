@@ -85,7 +85,7 @@
         &-name {
             @include typeface(--paragraph-left-normal-black);
             color: var(--color-text-primary);
-            margin-top: 0.8rem;
+            margin: auto; // Center text vertically when flag is hidden
 
             &--active {
                 font-weight: bold;

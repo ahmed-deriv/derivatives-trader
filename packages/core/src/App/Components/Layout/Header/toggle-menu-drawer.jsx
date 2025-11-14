@@ -6,6 +6,7 @@ import { useRemoteConfig } from '@deriv/api';
 import { Div100vhContainer, MobileDrawer, ToggleSwitch } from '@deriv/components';
 import {
     LegacyChartsIcon,
+    LegacyArrowLeft1pxIcon,
     LegacyChevronRight1pxIcon,
     LegacyHelpCentreIcon,
     LegacyLogout1pxIcon,
@@ -18,9 +19,9 @@ import { routes } from '@deriv/shared';
 import { observer, useStore } from '@deriv/stores';
 import { useTranslations } from '@deriv-com/translations';
 
-// eslint-disable-next-line no-unused-vars, import/no-unresolved -- Kept for future restoration of LiveChat functionality
+// eslint-disable-next-line no-unused-vars -- Kept for future restoration of LiveChat functionality
 import LiveChat from 'App/Components/Elements/LiveChat';
-// eslint-disable-next-line no-unused-vars, import/no-unresolved -- Kept for future restoration of WhatsApp functionality
+// eslint-disable-next-line no-unused-vars -- Kept for future restoration of WhatsApp functionality
 import WhatsApp from 'App/Components/Elements/WhatsApp';
 import NetworkStatus from 'App/Components/Layout/Footer';
 import getRoutesConfig from 'App/Constants/routes-config';
@@ -82,10 +83,14 @@ const ToggleMenuDrawer = observer(() => {
         setIsSubmenuExpanded(false);
     }, [setIsSubmenuExpanded, is_open, is_mobile_language_menu_open, setMobileLanguageMenuOpen]);
 
+    const handleBackClick = React.useCallback(async () => {
+        await sendBridgeEvent('trading:back');
+    }, [sendBridgeEvent]);
+
     // Simple logout handler that closes drawer and calls logout
     const handleLogout = React.useCallback(async () => {
         toggleDrawer();
-        sendBridgeEvent('trading:back', async () => {
+        await sendBridgeEvent('trading:back', async () => {
             await logoutClient();
         });
     }, [logoutClient, toggleDrawer, sendBridgeEvent]);
@@ -172,12 +177,27 @@ const ToggleMenuDrawer = observer(() => {
 
     return (
         <React.Fragment>
-            <a id='dt_mobile_drawer_toggle' onClick={toggleDrawer} className='header__mobile-drawer-toggle'>
-                <LegacyMenuHamburger1pxIcon
-                    iconSize='xs'
-                    className='header__mobile-drawer-icon'
-                    fill='var(--color-text-primary)'
-                />
+            <a 
+                id='dt_mobile_drawer_toggle' 
+                onClick={isBridgeAvailable() ? async (e) => {
+                    e.preventDefault();
+                    await handleBackClick();
+                } : toggleDrawer} 
+                className='header__mobile-drawer-toggle'
+            >
+                {isBridgeAvailable() ? (
+                    <LegacyArrowLeft1pxIcon
+                        iconSize='xs'
+                        className='header__mobile-drawer-icon'
+                        fill='var(--color-text-primary)'
+                    />
+                ) : (
+                    <LegacyMenuHamburger1pxIcon
+                        iconSize='xs'
+                        className='header__mobile-drawer-icon'
+                        fill='var(--color-text-primary)'
+                    />
+                )}
             </a>
             <MobileDrawer
                 alignment='left'
@@ -241,7 +261,10 @@ const ToggleMenuDrawer = observer(() => {
                                     </MobileDrawer.Item>
                                 )}
                                 {is_logged_in && (
-                                    <MobileDrawer.Item onClick={handleLogout}>
+                                    <MobileDrawer.Item onClick={async (e) => {
+                                        e.preventDefault();
+                                        await handleLogout();
+                                    }}>
                                         <MenuLink 
                                             icon={<LegacyLogout1pxIcon />} 
                                             text={isBridgeAvailable() ? localize('Back to app') : localize('Log out')} 

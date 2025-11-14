@@ -23,6 +23,27 @@ module.exports = function (env) {
             moduleIds: 'named',
             minimize: IS_RELEASE,
             minimizer: MINIMIZERS,
+            splitChunks: {
+                chunks: 'all',
+                cacheGroups: {
+                    // Split CSS by route to enable lazy loading
+                    styles: {
+                        name: (module, chunks) => `${chunks.map(c => c.name).join('~')}.styles`,
+                        test: /\.s?css$/,
+                        chunks: 'all',
+                        enforce: true,
+                        priority: 20,
+                    },
+                    // Keep vendor CSS separate
+                    vendorStyles: {
+                        name: 'vendors',
+                        test: /[\\/]node_modules[\\/].*\.s?css$/,
+                        chunks: 'all',
+                        enforce: true,
+                        priority: 30,
+                    },
+                },
+            },
         },
         output: {
             filename: 'trader/js/[name].js',

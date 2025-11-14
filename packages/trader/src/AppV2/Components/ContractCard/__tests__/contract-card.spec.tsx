@@ -28,15 +28,16 @@ const closedPositions = [
             longcode:
                 'You will receive a payout at expiry if the spot price never breaches the barrier. The payout is equal to the payout per point multiplied by the distance between the final price and the barrier.',
             payout: 0,
-            purchase_time: '27 May 2024 09:41:00',
+            purchase_time: 1716802860,
             sell_price: 0,
-            sell_time: '27 May 2024 09:43:36',
+            sell_time: 1716802916,
             shortcode: 'TURBOSLONG_1HZ100V_10.00_1716802860_1716804660_S-237P_3.971435_1716802860',
             transaction_id: 485824148848,
             underlying_symbol: '1HZ100V',
             profit_loss: '-10.00',
             display_name: '',
             purchase_time_unix: 1716802860,
+            sell_time_unix: 1716802916,
         },
     },
 ] as TClosedPosition[];
